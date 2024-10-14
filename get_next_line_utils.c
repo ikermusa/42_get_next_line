@@ -16,6 +16,8 @@ size_t	ft_strlen(const char *str)
 {
 	size_t	len;
 
+	if (!str)
+		return (0);
 	len = 0;
 	while (str[len])
 		len++;
@@ -70,13 +72,13 @@ char	*ft_strdup(const char *s)
 	int		i;
 
 	i = 0;
-	while (s[i] != '\0')
+	while (s[i])
 		i++;
 	copy = (char *)malloc((i + 1) * sizeof(char));
 	if (!copy)
 		return (NULL);
 	i = 0;
-	while (s[i] != '\0')
+	while (s[i])
 	{
 		copy[i] = s[i];
 		i++;
@@ -103,7 +105,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	subcadena = (char *)malloc((len + 1) * sizeof(char));
 	if (!subcadena)
 		return (NULL);
-	while (cadlen < len && s[start + cadlen] != '\0')
+	while (cadlen < len && s[start + cadlen])
 	{
 		subcadena[cadlen] = s[start + cadlen];
 		cadlen++;
