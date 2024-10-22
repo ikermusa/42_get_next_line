@@ -1,27 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: imusatad <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/12 09:28:45 by imusatad          #+#    #+#             */
-/*   Updated: 2024/10/12 09:28:49 by imusatad         ###   ########.fr       */
+/*   Created: 2024/10/22 10:47:06 by imusatad          #+#    #+#             */
+/*   Updated: 2024/10/22 10:47:08 by imusatad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
-# define BUFFER_SIZE 1
-# include <stdlib.h>
-# include <unistd.h>
+#include <fcntl.h>
+#include <stdio.h>
+#include "get_next_line.h"
 
-char	*get_next_line(int fd);
+int	main(void)
+{
+	int		fd;
+	char	*line;
 
-size_t	ft_strlen(const char *str);
-char	*ft_strchr(const char *s, int c);
-char	*ft_strjoin(char const *s1, char const *s2);
-char	*ft_strdup(const char *s);
-char	*ft_substr(char const *s, unsigned int start, size_t len);
+	fd = open("test.txt", O_RDONLY);
+	if (fd == -1)
+	{
+		printf("Error al abrir el archivo\n");
+		return (1);
+	}
 
-#endif
+	while ((line = get_next_line(fd)) != NULL)
+	{
+		printf("%s", line);
+		free(line);
+	}
+
+	close(fd);
+	return (0);
+}

@@ -27,14 +27,18 @@ char	*clean_storage(char *storage)
 
 	ptr = ft_strchr(storage, '\n');
 	if (!ptr)
+	{
+		new_storage = NULL;
 		return (ft_free(&storage));
-	len = ft_strlen(storage) - (ptr - storage + 1);
-	if (len == 0)
+	}
+	else
+		len = (ptr - storage) + 1;
+	if (!storage[len])
 		return (ft_free(&storage));
-	new_storage = ft_substr(storage, (ptr - storage) + 1, len);
-	if (!new_storage)
-		return (ft_free(&storage));
+	new_storage = ft_substr(storage, len, ft_strlen(storage) - len);
 	ft_free(&storage);
+	if (!new_storage)
+		return (NULL);
 	return (new_storage);
 }
 
@@ -68,7 +72,10 @@ char	*readbuf(int fd, char *storage)
 		if (rid > 0)
 		{
 			buffer[rid] = '\0';
-			storage = ft_strjoin(storage, buffer);
+			if (!storage)
+				storage = ft_strdup(buffer);
+			else
+				storage = ft_strjoin(storage, buffer);
 		}
 	}
 	free(buffer);
@@ -79,12 +86,13 @@ char	*readbuf(int fd, char *storage)
 
 char	*get_next_line(int fd)
 {
-	static char	*storage;
+	static char	*storage = {0};
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0)
 		return (NULL);
-	storage = read (fd, storage, BUFFER_SIZE);
+	if ((storage && !ft_strchr(storage, '\n')) || !storage)
+		storage = readbuf (fd, storage);
 	if (!storage)
 		return (NULL);
 	line = new_line(storage);
